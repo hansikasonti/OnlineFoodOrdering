@@ -30,7 +30,8 @@ public class AdminServlet extends HttpServlet {
 
         out.println("<body>");
 
-        out.println("<h1>Customer Orders</h1>");
+
+        out.println("<h1>⚙️ CUSTOMER ORDERS</h1>");
 
         try {
 
@@ -75,14 +76,8 @@ public class AdminServlet extends HttpServlet {
                 int groupId =
                         rs.getInt("order_group_id");
 
-                /*
-                 * New Order ID
-                 */
                 if (groupId != currentOrderGroupId) {
 
-                    /*
-                     * Display total of previous order
-                     */
                     if (currentOrderGroupId != -1) {
 
                         out.println("</table>");
@@ -91,14 +86,11 @@ public class AdminServlet extends HttpServlet {
                                 + orderTotal
                                 + "</h3>");
 
-                        out.println("<br>");
+                        out.println("<br><br>");
                     }
 
                     currentOrderGroupId = groupId;
 
-                    /*
-                     * Reset total for new order
-                     */
                     orderTotal = 0;
 
                     out.println("<h2>Order ID: "
@@ -113,27 +105,26 @@ public class AdminServlet extends HttpServlet {
                             + rs.getString("email")
                             + "</p>");
 
-                    out.println("<table border='1' cellpadding='10'>");
+                    out.println("<table border='1' "
+                            + "cellpadding='10' "
+                            + "cellspacing='0'>");
 
                     out.println("<tr>");
+
                     out.println("<th>Food</th>");
                     out.println("<th>Quantity</th>");
                     out.println("<th>Total</th>");
+
                     out.println("</tr>");
 
                     displayOrderId++;
                 }
 
-                /*
-                 * Get current food total
-                 */
                 double foodTotal =
                         rs.getDouble("total");
 
-                /*
-                 * Add to order total
-                 */
-                orderTotal = orderTotal + foodTotal;
+                orderTotal =
+                        orderTotal + foodTotal;
 
                 out.println("<tr>");
 
@@ -152,9 +143,6 @@ public class AdminServlet extends HttpServlet {
                 out.println("</tr>");
             }
 
-            /*
-             * Display total of last order
-             */
             if (currentOrderGroupId != -1) {
 
                 out.println("</table>");
@@ -183,6 +171,8 @@ public class AdminServlet extends HttpServlet {
         out.println("<br>");
 
         out.println("<a href='index.html'>Home</a>");
+
+       
 
         out.println("</body>");
         out.println("</html>");

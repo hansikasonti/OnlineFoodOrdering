@@ -20,7 +20,8 @@ public class CartServlet extends HttpServlet {
 
         PrintWriter out = response.getWriter();
 
-        HttpSession session = request.getSession();
+        HttpSession session =
+                request.getSession();
 
         Map<String, Integer> cart =
                 (Map<String, Integer>)
@@ -30,7 +31,17 @@ public class CartServlet extends HttpServlet {
                 (Map<String, Double>)
                 session.getAttribute("prices");
 
+        Map<String, String> foodNames =
+                (Map<String, String>)
+                session.getAttribute("foodNames");
+
+        Map<String, String> cartRestaurants =
+                (Map<String, String>)
+                session.getAttribute("cartRestaurants");
+
+
         out.println("<html>");
+
         out.println("<head>");
         out.println("<meta charset='UTF-8'>");
         out.println("<title>Shopping Cart</title>");
@@ -38,68 +49,124 @@ public class CartServlet extends HttpServlet {
 
         out.println("<body>");
 
-        out.println("<h1>Your Shopping Cart</h1>");
+        out.println("<h1>🛒 YOUR SHOPPING CART</h1>");
+
 
         if (cart == null || cart.isEmpty()) {
 
             out.println("<h2>Your cart is empty.</h2>");
 
-            out.println("<a href='foods.html'>View Food Items</a>");
+            out.println("<a href='foods.html'>Select Restaurant</a>");
 
         } else {
 
-            out.println("<table border='1' cellpadding='10'>");
-
-            out.println("<tr>");
-            out.println("<th>Food</th>");
-            out.println("<th>Price</th>");
-            out.println("<th>Quantity</th>");
-            out.println("<th>Subtotal</th>");
-            out.println("</tr>");
+            String currentRestaurant = "";
 
             double grandTotal = 0;
 
-            for (String food : cart.keySet()) {
+            for (String cartKey : cart.keySet()) {
 
-                int quantity = cart.get(food);
+                String restaurant =
+                        cartRestaurants.get(cartKey);
 
-                double price = prices.get(food);
+                /*
+                 * Print restaurant heading whenever
+                 * restaurant changes.
+                 */
 
-                double subtotal = price * quantity;
+                if (!restaurant.equals(currentRestaurant)) {
 
-                grandTotal += subtotal;
+                    if (!currentRestaurant.equals("")) {
+
+                        out.println("</table>");
+
+                        out.println("<br>");
+                    }
+
+                    currentRestaurant =
+                            restaurant;
+
+                    out.println("<h2>Restaurant: "
+                            + restaurant
+                            + "</h2>");
+
+                    out.println("<table border='1' "
+                            + "cellpadding='10' "
+                            + "cellspacing='0'>");
+
+                    out.println("<tr>");
+
+                    out.println("<th>Food</th>");
+                    out.println("<th>Price</th>");
+                    out.println("<th>Quantity</th>");
+                    out.println("<th>Subtotal</th>");
+
+                    out.println("</tr>");
+                }
+
+
+                String food =
+                        foodNames.get(cartKey);
+
+                int quantity =
+                        cart.get(cartKey);
+
+                double price =
+                        prices.get(cartKey);
+
+                double subtotal =
+                        price * quantity;
+
+                grandTotal =
+                        grandTotal + subtotal;
+
 
                 out.println("<tr>");
 
-                out.println("<td>" + food + "</td>");
+                out.println("<td>"
+                        + food
+                        + "</td>");
 
-                out.println("<td>Rs." + price + "</td>");
+                out.println("<td>Rs."
+                        + price
+                        + "</td>");
 
-                out.println("<td>" + quantity + "</td>");
+                out.println("<td>"
+                        + quantity
+                        + "</td>");
 
-                out.println("<td>Rs." + subtotal + "</td>");
+                out.println("<td>Rs."
+                        + subtotal
+                        + "</td>");
 
                 out.println("</tr>");
             }
 
+
             out.println("</table>");
+
+            out.println("<br>");
 
             out.println("<h2>Total: Rs."
                     + grandTotal
                     + "</h2>");
 
+            out.println("<br>");
+
             out.println("<a href='OrderServlet'>Place Order</a>");
 
             out.println("<br><br>");
 
-            out.println("<a href='foods.html'>Continue Shopping</a>");
+            out.println("<a href='foods.html'>Choose Another Restaurant</a>");
         }
+
 
         out.println("<br><br>");
 
         out.println("<a href='index.html'>Home</a>");
 
         out.println("</body>");
+
         out.println("</html>");
     }
 }
